@@ -1,36 +1,42 @@
-// Page Navigation Functions
+// Mobile Menu
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const hamburger = document.querySelector('.hamburger');
+  menu.classList.toggle('active');
+  hamburger.classList.toggle('active');
+}
+
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('active');
+  document.querySelector('.hamburger').classList.remove('active');
+}
+
+// Page Navigation
 function showHome() {
   document.getElementById('homePage').classList.remove('hidden');
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('controlPage').classList.add('hidden');
-  document.body.classList.remove('page-locked');
-  window.scrollTo(0, 0);
+  closeMobileMenu();
 }
 
 function showLogin() {
   document.getElementById('homePage').classList.add('hidden');
   document.getElementById('loginPage').classList.remove('hidden');
   document.getElementById('controlPage').classList.add('hidden');
-  document.body.classList.add('page-locked');
-  window.scrollTo(0, 0);
+  closeMobileMenu();
 }
 
 function showControl() {
   document.getElementById('homePage').classList.add('hidden');
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('controlPage').classList.remove('hidden');
-  document.body.classList.add('page-locked');
-  window.scrollTo(0, 0);
+  closeMobileMenu();
 }
 
-// Login Form Functions
+// Login Form
 function switchTab(tab) {
-  const buttons = document.querySelectorAll('.tab-btn');
-  buttons.forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   event.target.classList.add('active');
-  
-  const submitBtn = document.querySelector('form button[type="submit"]');
-  submitBtn.textContent = tab === 'login' ? 'Login' : 'Create Account';
 }
 
 function handleLogin(event) {
@@ -39,78 +45,86 @@ function handleLogin(event) {
   const password = document.getElementById('password').value;
   
   if (!email || !password) {
-    showToast('Please fill in all fields', 'error');
+    showToast('Please fill all fields', 'error');
     return;
   }
   
-  showToast('Logged in successfully!', 'success');
-  setTimeout(showControl, 1000);
+  showToast('Login successful! 🚜', 'success');
+  setTimeout(showControl, 1200);
 }
 
 function handleLogout() {
-  showToast('Logged out successfully', 'success');
-  document.body.classList.remove('page-locked');
-  setTimeout(showHome, 1000);
+  showToast('Logged out', 'info');
+  setTimeout(showHome, 800);
 }
 
-// Robot Control Functions
+// Robot Controls
 function handleMove(direction) {
-  showToast(`Moving ${direction}`, 'info');
+  showToast(`Moving ${direction.toUpperCase()}`, 'info');
 }
 
 function handleWaterPump() {
-  showToast('Water pump activated', 'success');
+  showToast('💧 Water pump ON', 'success');
 }
 
 function handleOpenArms() {
-  showToast('Arms opened to 180°', 'success');
+  showToast('🤖 Arms opened', 'success');
 }
 
 function handleCapturePhoto() {
-  showToast('Photo captured!', 'success');
-  
-  // Add new photo to gallery
+  showToast('📸 Photo captured!', 'success');
+  // Add photo to gallery
   const gallery = document.getElementById('photoGallery');
-  const photoCount = gallery.children.length;
   const newPhoto = document.createElement('div');
   newPhoto.className = 'photo-item';
-  newPhoto.innerHTML = `<div class="photo-placeholder">Photo ${photoCount + 1}</div>`;
+  newPhoto.textContent = '📷';
   gallery.insertBefore(newPhoto, gallery.firstChild);
 }
 
-// Keyboard Controls for Robot Movement
-document.addEventListener('keydown', function(event) {
-  if (document.getElementById('controlPage').classList.contains('hidden')) return;
+// Actions Switch
+function toggleActions() {
+  const toggle = document.getElementById('actionsToggle');
+  const buttons = document.querySelectorAll('.function-btn');
   
-  const key = event.key.toLowerCase();
-  switch(key) {
-    case 'w': handleMove('forward'); break;
-    case 'a': handleMove('left'); break;
-    case 's': handleMove('backward'); break;
-    case 'd': handleMove('right'); break;
+  if (toggle.checked) {
+    buttons.forEach(btn => btn.disabled = false);
+    showToast('Controls enabled', 'success');
+  } else {
+    buttons.forEach(btn => btn.disabled = true);
+    showToast('Controls disabled', 'info');
   }
-});
+}
 
-// Toast Notification Function
+// Toast Notification
 function showToast(message, type = 'info') {
   const toast = document.getElementById('toast');
   const toastIcon = document.getElementById('toastIcon');
   const toastMessage = document.getElementById('toastMessage');
   
-  toast.className = `toast ${type}`;
-  const icons = {
-    success: '✓',
-    info: 'ℹ️',
-    error: '✕'
-  };
-  toastIcon.textContent = icons[type] || icons.info;
+  const icons = { success: '✓', info: 'ℹ️', error: '✕' };
+  toastIcon.textContent = icons[type] || 'ℹ️';
   toastMessage.textContent = message;
+  toast.className = `toast ${type} show`;
   
-  toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Initialize Application
-window.onload = function() {
-  showHome();
-};
+// Keyboard Controls
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('controlPage').classList.contains('hidden')) return;
+  
+  const key = e.key.toLowerCase();
+  const moves = { 'w': 'forward', 'a': 'left', 's': 'backward', 'd': 'right' };
+  if (moves[key]) handleMove(moves[key]);
+});
+
+// Close mobile menu on outside click
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('mobileMenu');
+  const hamburger = document.querySelector('.hamburger');
+  if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+    closeMobileMenu();
+  }
+});
+
+window.onload = () => showHome();
