@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farming Robot - Autonomous Agricultural System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Home Page -->
+  <div id="homePage">
+    <header>
+      <nav>
+        <a href="#" class="logo">
+          <span></span>
+          <span>Farming Robot</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#why">Why</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#technical">Technical</a></li>
+          <li><a href="#" onclick="showLogin(); return false;" class="btn">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-icons">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <h1>Autonomous <span class="highlight">Farming Robot</span></h1>
+        <p>An intelligent agricultural automation system designed to revolutionize modern farming through computer vision, autonomous navigation, and smart sensor technology. Our study project demonstrates the future of sustainable agriculture.</p>
+        <div class="hero-buttons">
+          <a href="#" onclick="showControl(); return false;" class="btn btn-lg">Control Your Robot Now</a>
+          <a href="#why" class="btn btn-outline btn-lg">Learn More</a>
+        </div>
+      </section>
+
+      <!-- Why Section -->
+      <section id="why">
+        <h2>Why We Built This Robot</h2>
+        <p>Our farming robot addresses critical challenges in modern agriculture through intelligent automation</p>
+        <div class="card-grid card-grid-2">
+          <div class="card">
+            <div class="card-icon"></div>
+            <h3>Environmental Impact</h3>
+            <p>Reduce chemical usage and optimize resource consumption for sustainable farming practices.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"></div>
+            <h3>Efficiency</h3>
+            <p>Automate repetitive tasks to increase productivity and reduce labor costs in agriculture.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"></div>
+            <h3>Labor Shortage</h3>
+            <p>Address the growing shortage of agricultural workers with autonomous solutions.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"></div>
+            <h3>Innovation</h3>
+            <p>Apply cutting-edge robotics and AI technology to solve real-world farming challenges.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features">
+        <h2>Key Features</h2>
+        <p>Advanced technology integrated into a robust agricultural platform</p>
+        <div class="card-grid card-grid-4">
+          <div class="card card-center">
+            <div class="card-icon card-icon-primary"></div>
+            <h3>Computer Vision</h3>
+            <p>AI-powered crop detection and health monitoring using advanced image recognition</p>
+          </div>
+          <div class="card card-center">
+            <div class="card-icon card-icon-primary"></div>
+            <h3>Autonomous Navigation</h3>
+            <p>GPS-guided movement with obstacle detection for precise field coverage</p>
+          </div>
+          <div class="card card-center">
+            <div class="card-icon card-icon-primary"></div>
+            <h3>Smart Sensors</h3>
+            <p>Real-time soil moisture, temperature, and nutrient level monitoring</p>
+          </div>
+          <div class="card card-center">
+            <div class="card-icon card-icon-primary"></div>
+            <h3>Solar Powered</h3>
+            <p>Sustainable energy system with 8-hour continuous operation capability</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Section -->
+      <section id="technical">
+        <h2>Technical Performance</h2>
+        <p>Data-driven insights into robot efficiency and capabilities</p>
+        <div class="card-grid card-grid-2">
+          <div class="card">
+            <h3>Task Accuracy %</h3>
+            <table class="tech-table">
+              <tr><td>Weeding</td><td>100%</td></tr>
+              <tr><td>Monitoring</td><td>95%</td></tr>
+              <tr><td>Planting</td><td>85%</td></tr>
+              <tr><td>Harvesting</td><td>82%</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Battery Performance</h3>
+            <table class="tech-table">
+              <tr><td>0h</td><td>100%</td></tr>
+              <tr><td>2h</td><td>90%</td></tr>
+              <tr><td>4h</td><td>70%</td></tr>
+              <tr><td>6h</td><td>45%</td></tr>
+              <tr><td>8h</td><td>20%</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 2rem;">
+          <h3>Technical Specifications</h3>
+          <dl class="spec-grid">
+            <div class="spec-item">
+              <dt>Dimensions</dt>
+              <dd>120cm × 80cm × 60cm</dd>
+            </div>
+            <div class="spec-item">
+              <dt>Weight</dt>
+              <dd>45 kg</dd>
+            </div>
+            <div class="spec-item">
+              <dt>Speed</dt>
+              <dd>0.8 m/s average</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Farming Robot Project. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Login Page -->
+  <div id="loginPage" class="hidden">
+    <div class="login-container">
+      <div class="login-box">
+        <a href="#" onclick="showHome(); return false;" class="back-link">← Back to Home</a>
+        <div class="login-card">
+          <div class="login-icon"></div>
+          <h2>Farming Robot Control</h2>
+          <p>Sign in to control your watering robot</p>
+          <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+            <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
+          </div>
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="" required>
+            </div>
+            <button type="submit" class="btn btn-lg" style="width: 100%">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Page - NEW MOBILE-FRIENDLY LAYOUT -->
+  <div id="controlPage" class="hidden">
+    <div class="control-layout">
+      <!-- LEFT: Action Panel -->
+      <div class="control-panel-left">
+        <div class="card">
+          <h3>⚙️ Actions</h3>
+          <div class="function-buttons">
+            <button class="function-btn" onclick="handleWaterPump()">💧 Water Pump</button>
+            <button class="function-btn" onclick="handleOpenArms()">🤖 Open Arms</button>
+            <button class="function-btn" onclick="handleCapturePhoto()">📸 Capture Photo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: ESP Camera + Gallery -->
+      <div class="control-panel-center">
+        <div class="card" style="margin-bottom: 1rem;">
+          <h3>📹 Live Camera</h3>
+          <p style="color: #6b7280; margin-bottom: 1rem;">ESP32 camera stream</p>
+          <div class="camera-placeholder">
+            <span>📷</span>
+            <p style="color: #6b7280; margin-bottom: 0.5rem;">Camera stream will appear here</p>
+            <p style="color: #9ca3af; font-size: 0.875rem;">Configure ESP32 to stream to ws://your-stream-url</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>📸 Photos</h3>
+          <p style="color: #6b7280; margin-bottom: 1rem;">Recent captures</p>
+          <div class="photo-grid" id="photoGallery">
+            <div class="photo-item"><div class="photo-placeholder">1</div></div>
+            <div class="photo-item"><div class="photo-placeholder">2</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: WASD Controls -->
+      <div class="control-panel-right">
+        <div class="card">
+          <h3>🎮 Drive</h3>
+          <p style="color: #6b7280; margin-bottom: 1.5rem;">WASD or tap</p>
+          <div class="drive-controls">
+            <div class="drive-row">
+              <div></div>
+              <button class="drive-btn drive-up" onclick="handleMove('forward')">↑</button>
+              <div></div>
+            </div>
+            <div class="drive-row">
+              <button class="drive-btn drive-left" onclick="handleMove('left')">←</button>
+              <button class="drive-btn drive-center" onclick="handleMove('stop')">⏹</button>
+              <button class="drive-btn drive-right" onclick="handleMove('right')">→</button>
+            </div>
+            <div class="drive-row">
+              <div></div>
+              <button class="drive-btn drive-down" onclick="handleMove('backward')">↓</button>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Sidebar -->
+      <aside class="sidebar">
+        <h3>Navigation</h3>
+        <ul class="sidebar-nav">
+          <li><a href="#" onclick="showHome(); return false;">🏠 Home</a></li>
+          <li><a href="#" class="active">🤖 Control</a></li>
+          <li><button onclick="handleLogout()">🚪 Logout</button></li>
+        </ul>
+      </aside>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <span id="toastIcon"></span>
+      <span id="toastMessage"></span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
