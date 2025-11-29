@@ -1,4 +1,7 @@
-// Mobile Menu
+// Write JavaScript here// Mobile Menu
+function scrollToSection(sectionId) {
+    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+}
 function toggleMobileMenu() {
   const menu = document.getElementById('mobileMenu');
   const hamburger = document.querySelector('.hamburger');

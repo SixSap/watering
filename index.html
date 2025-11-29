@@ -1,148 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Farming Robot Control</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farming Robot Control</title>
+    <style>
+        /* COMPLETE CSS - PASTE THIS IN CSS PANEL */
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);color:#1a1a1a;line-height:1.6;overflow-x:hidden;}
+        .hidden{display:none!important;}
+        .overlay-page{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:#f8fafc;overflow-y:auto;}
+        
+        /* NAVBAR */
+        .navbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);box-shadow:0 2px 20px rgba(0,0,0,0.1);position:sticky;top:0;z-index:100;}
+        .nav-brand{display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:1.2rem;}
+        .hamburger{display:flex;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:0.5rem;}
+        .hamburger span{width:25px;height:3px;background:#0891b2;transition:0.3s;}
+        .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(6px,6px);}
+        .hamburger.active span:nth-child(2){opacity:0;}
+        .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px);}
+        .nav-menu{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:white;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding:1rem 0;}
+        .nav-menu.active{display:flex;}
+        .nav-menu li{padding:0.75rem 1.5rem;}
+        .nav-menu a{color:#374151;text-decoration:none;font-weight:500;}
+        
+        /* HERO - FIXED BUTTONS */
+        .hero{text-align:center;padding:6rem 1.5rem;max-width:700px;margin:0 auto;}
+        .hero h1{font-size:clamp(2.5rem,6vw,4rem);font-weight:800;margin-bottom:1.5rem;background:linear-gradient(135deg,#0891b2,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .hero p{font-size:1.3rem;color:#6b7280;margin-bottom:3rem;}
+        .hero-buttons{display:flex;flex-direction:column;gap:2rem;align-items:center;margin-top:2rem;}
+        .btn{display:inline-block;padding:1.5rem 3.5rem;border-radius:1rem;text-decoration:none;font-weight:700;font-size:1.2rem;text-align:center;line-height:1.3;box-shadow:0 8px 25px rgba(8,145,178,0.4);border:3px solid rgba(255,255,255,0.3);min-height:70px;transition:all 0.3s ease;position:relative;overflow:visible;}
+        #control-btn{background:#0891b2!important;color:white!important;}
+        #control-btn:hover{background:#0e7490!important;transform:translateY(-4px)!important;box-shadow:0 15px 35px rgba(8,145,178,0.6)!important;}
+        .btn-outline{background:rgba(255,255,255,0.95);color:#0891b2;border:3px solid #0891b2;}
+        .btn-outline:hover{background:#0891b2;color:white;transform:translateY(-2px);}
+        
+        /* SECTIONS */
+        .section{padding:6rem 1.5rem;scroll-margin-top:6rem;}
+        .container{max-width:1200px;margin:0 auto;}
+        .section h2{font-size:2.8rem;text-align:center;margin-bottom:3rem;background:linear-gradient(135deg,#0891b2,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:3rem;}
+        .feature-card{background:white;padding:3rem;border-radius:1.5rem;box-shadow:0 20px 40px rgba(0,0,0,0.1);text-align:center;}
+        .feature-icon{font-size:4rem;margin-bottom:1.5rem;}
+        
+        /* CONTROL PANEL */
+        .fixed-home-btn{position:fixed;top:1rem;left:1rem;z-index:1001;}
+        .home-btn{background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border:2px solid #0891b2;color:#0891b2;padding:0.75rem 1.5rem;border-radius:50px;font-weight:600;cursor:pointer;font-size:1rem;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+        .home-btn:hover{background:#0891b2;color:white;transform:translateY(-2px);}
+        .control-scroll-container{min-height:100vh;padding:6rem 1rem 1rem;}
+        .control-layout{display:grid;grid-template-columns:1fr 2fr 1fr;gap:2rem;max-width:1200px;margin:0 auto;}
+        .card{background:white;padding:2rem;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,0.1);}
+        .function-buttons{display:flex;flex-direction:column;gap:2rem;margin-top:1.5rem;}
+        .function-btn{width:100%;padding:1.75rem 2rem;background:#f1f5f9;color:#475569;border:2px solid #e2e8f0;border-radius:1rem;font-weight:600;font-size:1.1rem;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:0.75rem;}
+        .function-btn:not(:disabled):hover{background:#0891b2;color:white;border-color:#0891b2;transform:translateY(-3px);box-shadow:0 15px 30px rgba(8,145,178,0.3);}
+        
+        /* RESPONSIVE */
+        @media(max-width:768px){.control-layout{grid-template-columns:1fr;gap:1.5rem;}.section{padding:3rem 1rem;}.features-grid{grid-template-columns:1fr;}.hero-buttons{gap:1.5rem;}}
+        @media(min-width:769px){.hamburger{display:none;}.nav-menu{display:flex!important;position:static;background:none;box-shadow:none;flex-direction:row;gap:2rem;padding:0;}}
+        
+        /* TOAST */
+        .toast{position:fixed;bottom:2rem;right:2rem;background:white;padding:1rem 1.5rem;border-radius:1rem;box-shadow:0 20px 40px rgba(0,0,0,0.15);display:none;align-items:center;gap:0.75rem;z-index:10000;min-width:300px;}
+        .toast.show{display:flex;}
+    </style>
 </head>
 <body>
-  <!-- Home Page -->
-  <div id="homePage">
-    <header>
-      <nav class="navbar">
-        <div class="nav-brand">
-          <span class="logo-icon">🚜</span>
-          <span>Farming Robot</span>
-        </div>
-        <button class="hamburger" onclick="toggleMobileMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <ul class="nav-menu" id="mobileMenu">
-          <li><a href="#features" onclick="closeMobileMenu()">Features</a></li>
-          <li><a href="#control-btn" onclick="closeMobileMenu()">Control</a></li>
-          <li><button class="btn-mobile" onclick="showLogin(); closeMobileMenu()">Login</button></li>
-        </ul>
-      </nav>
-    </header>
+    <!-- HOME PAGE -->
+    <div id="homePage">
+        <nav class="navbar">
+            <div class="nav-brand">🤖 Farming Robot</div>
+            <button class="hamburger" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu" id="mobileMenu">
+                <li><a href="#why" onclick="closeMobileMenu();scrollToSection('why')">Why</a></li>
+                <li><a href="#features" onclick="closeMobileMenu();scrollToSection('features')">Features</a></li>
+                <li><a href="#technical" onclick="closeMobileMenu();scrollToSection('technical')">Technical</a></li>
+                <li><button class="btn-mobile" onclick="showLogin();closeMobileMenu()">Login</button></li>
+            </ul>
+        </nav>
 
-    <!-- Hero -->
-    <main class="hero">
-      <h1>Autonomous <span class="highlight">Farming Robot</span></h1>
-      <p>AI-powered agriculture automation</p>
-      <div class="hero-buttons">
-        <a href="#" id="control-btn" class="btn btn-lg" onclick="showLogin(); return false;">Control Your Robot Now</a>
-        <a href="#features" class="btn btn-outline btn-lg">Learn More</a>
-      </div>
-    </main>
-  </div>
+        <!-- HERO -->
+        <main class="hero">
+            <h1>Autonomous <span>Farming Robot</span></h1>
+            <p>AI-powered agriculture automation</p>
+            <div class="hero-buttons">
+                <a href="#" id="control-btn" class="btn btn-lg" onclick="showLogin();return false;">
+                    Control Your Robot Now
+                </a>
+                <a href="#features" class="btn btn-outline btn-lg" onclick="scrollToSection('features')">
+                    Learn More
+                </a>
+            </div>
+        </main>
 
-  <!-- Login Overlay -->
-  <div id="loginPage" class="overlay-page hidden">
-    <div class="login-container">
-      <button class="back-btn" onclick="showHome()">← Back</button>
-      <div class="login-box">
-        <div class="login-icon">🚜</div>
-        <h2>Robot Control</h2>
-        <p>Login to access controls</p>
-        <div class="tab-buttons">
-          <button class="tab-btn active" onclick="switchTab('login')">Login</button>
-          <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
-        </div>
-        <form id="loginForm" onsubmit="handleLogin(event)">
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="email" placeholder="you@example.com" required>
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="••••••" required>
-          </div>
-          <button type="submit" class="btn btn-lg full-width">Login</button>
-        </form>
-      </div>
+        <!-- SECTIONS -->
+        <section id="why" class="section">
+            <div class="container">
+                <h2>Why Choose Our Robot?</h2>
+                <div class="section-content">
+                    <p>Revolutionary automation saves time, reduces costs, increases yields with precision farming.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <div class="container">
+                <h2>Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>Autonomous Navigation</h3>
+                        <p>AI pathfinding & obstacle avoidance</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💧</div>
+                        <h3>Precision Watering</h3>
+                        <p>Smart irrigation by soil sensors</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h3>Live Monitoring</h3>
+                        <p>Real-time camera & photo capture</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </div>
 
-  <!-- Control Panel Overlay -->
-  <div id="controlPage" class="overlay-page hidden">
-    <div class="control-scroll-container">
-      <!-- Mobile Header -->
-      <div class="mobile-control-header">
-        <button class="back-btn" onclick="showHome()">← Home</button>
-        <h2>🤖 Robot Control</h2>
-        <button class="logout-btn" onclick="handleLogout()">Logout</button>
-      </div>
-
-      <div class="control-layout">
-        <!-- LEFT: Actions Switch -->
-        <div class="control-panel-left">
-          <div class="card">
-            <h3>⚙️ Actions</h3>
-            <label class="switch-container">
-              <input type="checkbox" id="actionsToggle" onchange="toggleActions()">
-              <span class="switch"></span>
-              <span class="switch-label">Enable Controls</span>
-            </label>
-            <div class="function-buttons" id="actionButtons">
-              <button class="function-btn" onclick="handleWaterPump()" disabled>💧 Water Pump</button>
-              <button class="function-btn" onclick="handleOpenArms()" disabled>🤖 Open Arms</button>
-              <button class="function-btn" onclick="handleCapturePhoto()" disabled>📸 Capture</button>
-            </div>
-          </div>
+    <!-- CONTROL PANEL -->
+    <div id="controlPage" class="overlay-page hidden">
+        <div class="fixed-home-btn">
+            <button class="home-btn" onclick="showHome()">🏠 Home</button>
         </div>
-
-        <!-- CENTER: Camera -->
-        <div class="control-panel-center">
-          <div class="card">
-            <h3>📹 Live Camera</h3>
-            <div class="camera-placeholder">
-              <span>📷</span>
-              <p>ESP32 Camera Stream</p>
+        <div class="control-scroll-container">
+            <div class="control-layout">
+                <div class="control-panel-left">
+                    <div class="card">
+                        <h3>Actions</h3>
+                        <label class="switch-container">
+                            <input type="checkbox" id="actionsToggle" onchange="toggleActions()">
+                            <span class="switch"></span>
+                            <span>Enable Controls</span>
+                        </label>
+                        <div class="function-buttons" id="actionButtons">
+                            <button class="function-btn" onclick="handleWaterPump()" disabled>💧 Water Pump</button>
+                            <button class="function-btn" onclick="handleOpenArms()" disabled>🤖 Open Arms</button>
+                            <button class="function-btn" onclick="handleCapturePhoto()" disabled>📸 Capture Photo</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="card">
-            <h3>📸 Photos</h3>
-            <div class="photo-grid" id="photoGallery"></div>
-          </div>
         </div>
-
-        <!-- RIGHT: WASD -->
-        <div class="control-panel-right">
-          <div class="card">
-            <h3>🎮 Drive</h3>
-            <p>WASD or tap buttons</p>
-            <div class="drive-controls">
-              <div class="drive-row">
-                <div></div>
-                <button class="drive-btn drive-up" onclick="handleMove('forward')">↑</button>
-                <div></div>
-              </div>
-              <div class="drive-row">
-                <button class="drive-btn drive-left" onclick="handleMove('left')">←</button>
-                <button class="drive-btn drive-center" onclick="handleMove('stop')">⏹</button>
-                <button class="drive-btn drive-right" onclick="handleMove('right')">→</button>
-              </div>
-              <div class="drive-row">
-                <div></div>
-                <button class="drive-btn drive-down" onclick="handleMove('backward')">↓</button>
-                <div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Toast -->
-  <div id="toast" class="toast">
-    <span id="toastIcon"></span>
-    <span id="toastMessage"></span>
-  </div>
+    <!-- TOAST -->
+    <div id="toast" class="toast">
+        <span id="toastIcon"></span>
+        <span id="toastMessage"></span>
+    </div>
 
-  <script src="script.js"></script>
+    <script>
+        // ALL JAVASCRIPT
+        function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+        function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('active');document.querySelector('.hamburger').classList.toggle('active');}
+        function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('active');document.querySelector('.hamburger').classList.remove('active');}
+        function showHome(){document.getElementById('homePage').classList.remove('hidden');document.getElementById('controlPage').classList.add('hidden');closeMobileMenu();}
+        function showLogin(){document.getElementById('homePage').classList.add('hidden');document.getElementById('controlPage').classList.add('hidden');}
+        function showControl(){document.getElementById('homePage').classList.add('hidden');document.getElementById('controlPage').classList.remove('hidden');}
+        function toggleActions(){const t=document.getElementById('actionsToggle'),b=document.querySelectorAll('.function-btn');b.forEach(e=>e.disabled=!t.checked);}
+        function handleWaterPump(){showToast('💧 Water pump ON','success');}
+        function handleOpenArms(){showToast('🤖 Arms opened','success');}
+        function handleCapturePhoto(){showToast('📸 Photo captured!','success');}
+        function showToast(m,t='info'){const o=document.getElementById('toast'),i=document.getElementById('toastIcon'),e=document.getElementById('toastMessage');i.textContent={success:'✓',info:'ℹ️',error:'✕'}[t]||'ℹ️';e.textContent=m;o.className=`toast show`;setTimeout(()=>o.classList.remove('show'),3000);}
+        window.onload=showHome;
+    </script>
 </body>
 </html>
